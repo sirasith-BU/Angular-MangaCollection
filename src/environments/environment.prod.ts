@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://mongodb-mangacollection.onrender.com',
+  apiUrl: '__API_URL__',
 };
