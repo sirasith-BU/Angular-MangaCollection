@@ -7,7 +7,7 @@ import {
   GetMangaAsyncDTO,
 } from '../interfaces/IManga';
 import { Observable } from 'rxjs';
-import { environment } from '../../enviroments/enviroment.prod';
+import { environment } from '../../environments/environment.prod';
 
 @Injectable({ providedIn: 'root' })
 export class MangaService {
