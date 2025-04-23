@@ -5,11 +5,76 @@
     Manga Collections
   </div>
 
-  <div class="flex justify-center mx-4 sm:justify-end">
+  <!-- Search -->
+  <div
+    class="flex flex-col md:flex-row justify-between items-center md:items-end p-2 gap-1 md:gap-0"
+  >
+    <!-- Id, Title, Description -->
+    <div class="flex items-end">
+      <div class="flex flex-col gap-2">
+        <div>Search</div>
+        <p-iconfield>
+          <input
+            type="text"
+            pInputText
+            placeholder="id title description"
+            class="w-[21rem] md:w-[18rem] px-3 py-2 rounded-lg"
+            [(ngModel)]="searchText"
+            (ngModelChange)="searchMangas()"
+          />
+          <p-inputicon styleClass="pi pi-search" (click)="searchMangas()" />
+        </p-iconfield>
+      </div>
+      <p-button
+        icon="pi pi-times"
+        (onClick)="searchText = ''"
+        (ngModelChange)="searchMangas()"
+        (onClick)="searchMangas()"
+      ></p-button>
+    </div>
+    <!-- Type -->
+    <div class="flex items-end">
+      <div class="flex flex-col gap-2">
+        <div>Type</div>
+        <p-select
+          [options]="mangaTypeOptions"
+          [(ngModel)]="searchType"
+          placeholder="Select type"
+          class="w-[21rem] md:w-full"
+          (ngModelChange)="searchMangas()"
+        ></p-select>
+      </div>
+      <p-button
+        icon="pi pi-times"
+        (onClick)="searchType = ''"
+        (onClick)="searchMangas()"
+      ></p-button>
+    </div>
+    <!-- Publisher -->
+    <div class="flex items-end">
+      <div class="flex flex-col gap-2">
+        <div>Publisher</div>
+        <p-select
+          [options]="mangaPublisherOptions"
+          [(ngModel)]="searchPublisher"
+          placeholder="Select publisher"
+          class="w-[21rem] md:w-full"
+          (ngModelChange)="searchMangas()"
+        ></p-select>
+      </div>
+      <p-button
+        icon="pi pi-times"
+        (onClick)="searchPublisher = ''"
+        (ngModelChange)="searchMangas()"
+        (onClick)="searchMangas()"
+      ></p-button>
+    </div>
     <!-- Add Manga btn -->
     <p-button
+      class="mt-2 md:mt-0"
       icon="pi pi-plus"
       label="Add Manga"
+      styleClass="w-40"
       variant="outlined"
       (onClick)="addDialog()"
     ></p-button>

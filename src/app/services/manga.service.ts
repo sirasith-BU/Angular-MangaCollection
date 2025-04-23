@@ -7,7 +7,7 @@ import {
   GetMangaAsyncDTO,
 } from '../interfaces/IManga';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment.prod';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class MangaService {
@@ -33,5 +33,24 @@ export class MangaService {
 
   deleteManga(id: number): Observable<any> {
     return this.http.delete(this.mangaApiUrl + `/${id}`);
+  }
+
+  searchMangas(
+    keyword: string,
+    type: string,
+    publisher: string
+  ): Observable<any> {
+    return this.http.get(
+      this.mangaApiUrl +
+        `/search?keyword=${keyword}&type=${type}&publisher=${publisher}`
+    );
+  }
+
+  getPublishers(): Observable<any> {
+    return this.http.get(this.mangaApiUrl + '/publishers');
+  }
+
+  getTypes(): Observable<any> {
+    return this.http.get(this.mangaApiUrl + '/types');
   }
 }

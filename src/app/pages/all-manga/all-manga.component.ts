@@ -23,6 +23,8 @@ import { Response } from '../../interfaces/IResponse';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-all-manga',
@@ -37,6 +39,8 @@ import { MessageService } from 'primeng/api';
     ReactiveFormsModule,
     SelectModule,
     ToastModule,
+    IconFieldModule,
+    InputIconModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './all-manga.component.html',
@@ -55,8 +59,12 @@ export class AllMangaComponent implements OnInit {
   showDetailDialog: boolean = false;
   showAddDialog: boolean = false;
   // Option
-  mangaPublisherOptions: string[] = ['Siam Inter comics', 'Pheonix Next'];
-  mangaTypeOptions: string[] = ['Manga', 'Light Novel'];
+  mangaPublisherOptions: string[] = [];
+  mangaTypeOptions: string[] = [];
+  // Search Text
+  searchText: string = '';
+  searchType: string = '';
+  searchPublisher: string = '';
 
   private confirmationService = inject(ConfirmationService);
   private mangaService = inject(MangaService);
@@ -85,7 +93,6 @@ export class AllMangaComponent implements OnInit {
     this.mangaService.getManga().subscribe({
       next: (response: Response) => {
         this.mangas = response.data;
-        this.cdr.detectChanges();
         // this.messageService.add({
         //   severity: 'info',
         //   summary: 'Load Mangas',
@@ -100,6 +107,57 @@ export class AllMangaComponent implements OnInit {
         });
       },
     });
+    this.mangaService.getPublishers().subscribe({
+      next: (response: Response) => {
+        this.mangaPublisherOptions = response.data;
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Load Mangas',
+          detail: err.message,
+        });
+      },
+    });
+    this.mangaService.getTypes().subscribe({
+      next: (response: Response) => {
+        this.mangaTypeOptions = response.data;
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Load Mangas',
+          detail: err.message,
+        });
+      },
+    });
+    this.cdr.detectChanges();
+  }
+
+  searchMangas() {
+    if (
+      this.searchText != '' ||
+      this.searchType != '' ||
+      this.searchPublisher != ''
+    ) {
+      this.mangaService
+        .searchMangas(this.searchText, this.searchType, this.searchPublisher)
+        .subscribe({
+          next: (response: Response) => {
+            this.mangas = response.data;
+            this.cdr.detectChanges();
+          },
+          error: (err) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Load Mangas',
+              detail: err.message,
+            });
+          },
+        });
+    } else {
+      this.loadData();
+    }
   }
 
   confirmDelete(mangaData: GetMangaDTO) {
