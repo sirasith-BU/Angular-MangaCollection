@@ -19,7 +19,8 @@ import {
   GetMangaDTO,
   UpdateMangaDTO,
 } from '../../interfaces/IManga';
-import { SelectModule } from 'primeng/select';
+// import { SelectModule } from 'primeng/select';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-all-manga',
@@ -32,7 +33,8 @@ import { SelectModule } from 'primeng/select';
     ButtonModule,
     ConfirmDialogModule,
     ReactiveFormsModule,
-    SelectModule,
+    // SelectModule,
+    DropdownModule
   ],
   providers: [ConfirmationService],
   templateUrl: './all-manga.component.html',

@@ -181,12 +181,12 @@
           (input)="onPublisherInputChange()"
         />
         <!-- Select Publisher -->
-        <p-select
+        <p-dropdown
           formControlName="publisher"
           [options]="mangaPublisherOptions"
           placeholder="Select publisher"
           class="w-full"
-        ></p-select>
+        ></p-dropdown>
       </div>
     </div>
 
@@ -205,12 +205,12 @@
           (input)="onTypeInputChange()"
         />
         <!-- Select Type -->
-        <p-select
+        <p-dropdown
           formControlName="type"
           [options]="mangaTypeOptions"
           placeholder="Select type"
           class="w-full"
-        ></p-select>
+        ></p-dropdown>
       </div>
     </div>
 
