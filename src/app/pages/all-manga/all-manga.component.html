@@ -1,3 +1,4 @@
+<p-toast />
 <div class="w-full h-full overflow-auto">
   <!-- Title -->
   <div class="flex justify-center text-4xl font-bold p-4 md:justify-start">
@@ -15,9 +16,10 @@
   </div>
 
   <!-- All Mangas -->
-  <div
-    class="grid 2xl:grid-cols-5 xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2"
-  >
+  <!-- <div
+    class="grid 2xl:grid-cols-5 xl:grid-cols-4 md:grid-cols-2 sm:grid-cols-2"
+  > -->
+  <div class="grid grid-cols-2 xl:grid-cols-5 md:grid-cols-3">
     <div *ngFor="let manga of mangas" class="p-2">
       <p-card>
         <ng-template #header>
