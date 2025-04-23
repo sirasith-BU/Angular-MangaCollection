@@ -13,16 +13,13 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
-import { MangaService } from '../../../services/manga.service';
+import { MangaService } from '../../services/manga.service';
 import {
   GetMangaAsyncDTO,
   GetMangaDTO,
   UpdateMangaDTO,
-} from '../../../interfaces/IManga';
-import { Response } from '../../../interfaces/IResponse';
+} from '../../interfaces/IManga';
 import { SelectModule } from 'primeng/select';
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-all-manga',
@@ -36,9 +33,8 @@ import { MessageService } from 'primeng/api';
     ConfirmDialogModule,
     ReactiveFormsModule,
     SelectModule,
-    ToastModule,
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [ConfirmationService],
   templateUrl: './all-manga.component.html',
   styleUrl: './all-manga.component.css',
 })
@@ -62,7 +58,6 @@ export class AllMangaComponent implements OnInit {
   private mangaService = inject(MangaService);
   private formBuilder = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
-  private messageService = inject(MessageService);
 
   constructor() {
     this.addMangaForm = this.formBuilder.group({
@@ -83,23 +78,12 @@ export class AllMangaComponent implements OnInit {
 
   loadData() {
     this.mangaService.getManga().subscribe({
-      next: (response: Response) => {
+      next: (response: any) => {
         console.log('Load Manga Response', response);
         this.mangas = response.data;
         this.cdr.detectChanges();
-        // this.messageService.add({
-        //   severity: 'info',
-        //   summary: 'Load Mangas',
-        //   detail: response.message,
-        // });
       },
-      error: (err) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Load Mangas',
-          detail: err.message,
-        });
-      },
+      error: (err) => console.error('❌ Error:', err),
     });
   }
 
@@ -108,25 +92,14 @@ export class AllMangaComponent implements OnInit {
       header: 'Are you sure?',
       message: `you want to delete ${mangaData.title}`,
       accept: () => {
+        console.log('Accept Delete');
         this.mangaService.deleteManga(mangaData.mangaId).subscribe({
-          next: (response: Response) => {
-            this.loadData();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Delete Manga',
-              detail: response.message,
-            });
-          },
-          error: (err) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Delete Manga',
-              detail: err.message,
-            });
-          },
+          next: () => this.loadData(),
         });
       },
-      reject: () => {},
+      reject: () => {
+        console.log('Reject Delete');
+      },
     });
   }
 
@@ -134,8 +107,9 @@ export class AllMangaComponent implements OnInit {
     this.selectedMangaId = mangaData.mangaId;
     this.mangaService
       .getMangaAsync(this.selectedMangaId)
-      .subscribe((response: any) => {
-        this.selectedManga = response.data[0];
+      .subscribe((data: any) => {
+        this.selectedManga = data[0];
+        this.cdr.detectChanges();
         this.showDetailDialog = true;
       });
   }
@@ -180,43 +154,23 @@ export class AllMangaComponent implements OnInit {
       };
       if (this.selectedMangaId === -1) {
         this.mangaService.createManga(newManga).subscribe({
-          next: (response: Response) => {
+          next: () => {
+            console.log('✅ Manga created');
             this.loadData();
             this.showAddDialog = false;
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Create Manga',
-              detail: response.message,
-            });
           },
-          error: (err) => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Create Manga',
-              detail: err.message,
-            });
-          },
+          error: (err) => console.error('❌ Error:', err),
         });
       } else {
         this.mangaService
           .updateManga(newManga, this.selectedMangaId)
           .subscribe({
-            next: (response: Response) => {
+            next: () => {
+              console.log('✅ Manga updated');
               this.loadData();
               this.showAddDialog = false;
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Update Manga',
-                detail: response.message,
-              });
             },
-            error: (err) => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Update Manga',
-                detail: err.message,
-              });
-            },
+            error: (err) => console.error('❌ Error:', err),
           });
       }
     }
