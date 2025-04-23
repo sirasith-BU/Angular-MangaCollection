@@ -19,8 +19,7 @@ import {
   GetMangaDTO,
   UpdateMangaDTO,
 } from '../../interfaces/IManga';
-// import { SelectModule } from 'primeng/select';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-all-manga',
@@ -33,8 +32,7 @@ import { DropdownModule } from 'primeng/dropdown';
     ButtonModule,
     ConfirmDialogModule,
     ReactiveFormsModule,
-    // SelectModule,
-    DropdownModule
+    SelectModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './all-manga.component.html',
@@ -80,9 +78,8 @@ export class AllMangaComponent implements OnInit {
 
   loadData() {
     this.mangaService.getManga().subscribe({
-      next: (response: any) => {
-        console.log('Load Manga Response', response);
-        this.mangas = response.data;
+      next: (data: any) => {
+        this.mangas = data;
         this.cdr.detectChanges();
       },
       error: (err) => console.error('❌ Error:', err),
