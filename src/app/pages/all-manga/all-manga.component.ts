@@ -13,13 +13,13 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
-import { MangaService } from '../../../services/manga.service';
+import { MangaService } from '../../services/manga.service';
 import {
   GetMangaAsyncDTO,
   GetMangaDTO,
   UpdateMangaDTO,
-} from '../../../interfaces/IManga';
-import { Response } from '../../../interfaces/IResponse';
+} from '../../interfaces/IManga';
+import { Response } from '../../interfaces/IResponse';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
