@@ -84,6 +84,7 @@ export class AllMangaComponent implements OnInit {
   loadData() {
     this.mangaService.getManga().subscribe({
       next: (response: Response) => {
+        console.log('Load Manga Response', response);
         this.mangas = response.data;
         this.cdr.detectChanges();
         // this.messageService.add({

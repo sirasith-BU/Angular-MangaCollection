@@ -16,41 +16,40 @@
   </div>
 
   <!-- All Mangas -->
-  <!-- <div
-    class="grid 2xl:grid-cols-5 xl:grid-cols-4 md:grid-cols-2 sm:grid-cols-2"
-  > -->
-  <div class="grid grid-cols-2 xl:grid-cols-5 md:grid-cols-3">
-    <div *ngFor="let manga of mangas" class="p-2">
-      <p-card>
-        <ng-template #header>
-          <img
-            class="w-full h-full max-h-100 object-cover rounded-lg"
-            [src]="manga.imageUrl"
-            [alt]="manga.title"
-          />
-        </ng-template>
-        <ng-template #title> {{ manga.title }} </ng-template>
-        <ng-template #subtitle> {{ manga.publisher }} </ng-template>
-        <div class="text-gray-400 truncate">
-          {{ manga.description || "No description." }}
-        </div>
-        <ng-template #footer>
-          <div class="flex justify-between">
-            <p-button
-              label="Detail"
-              severity="info"
-              variant="outlined"
-              (click)="detailDialog(manga)"
-            ></p-button>
-            <p-button
-              label="Delete"
-              variant="outlined"
-              severity="danger"
-              (click)="confirmDelete(manga)"
-            ></p-button>
+  <div *ngIf="mangas">
+    <div class="grid grid-cols-2 xl:grid-cols-5 md:grid-cols-3">
+      <div *ngFor="let manga of mangas" class="p-2">
+        <p-card>
+          <ng-template #header>
+            <img
+              class="w-full h-full max-h-100 object-cover rounded-lg"
+              [src]="manga.imageUrl"
+              [alt]="manga.title"
+            />
+          </ng-template>
+          <ng-template #title> {{ manga.title }} </ng-template>
+          <ng-template #subtitle> {{ manga.publisher }} </ng-template>
+          <div class="text-gray-400 truncate">
+            {{ manga.description || "No description." }}
           </div>
-        </ng-template>
-      </p-card>
+          <ng-template #footer>
+            <div class="flex justify-between">
+              <p-button
+                label="Detail"
+                severity="info"
+                variant="outlined"
+                (click)="detailDialog(manga)"
+              ></p-button>
+              <p-button
+                label="Delete"
+                variant="outlined"
+                severity="danger"
+                (click)="confirmDelete(manga)"
+              ></p-button>
+            </div>
+          </ng-template>
+        </p-card>
+      </div>
     </div>
   </div>
 </div>
