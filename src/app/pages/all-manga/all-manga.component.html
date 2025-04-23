@@ -1,4 +1,5 @@
 <div class="w-full h-full overflow-auto">
+  <p-toast />
   <!-- Title -->
   <div class="flex justify-center text-4xl font-bold p-4 md:justify-start">
     Manga Collections
@@ -15,37 +16,21 @@
   </div>
 
   <!-- All Mangas -->
-  <div
-    class="grid 2xl:grid-cols-5 xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2"
-  >
-    <div *ngFor="let manga of mangas" class="p-2">
-      <p-card>
-        <ng-template #header>
-          <img
-            class="w-full h-full max-h-100 object-cover rounded-lg"
-            [src]="manga.imageUrl"
-            [alt]="manga.title"
-          />
-        </ng-template>
-        <ng-template #title> {{ manga.title }} </ng-template>
-        <ng-template #subtitle> {{ manga.publisher }} </ng-template>
-        <div class="text-gray-400 truncate">
-          {{ manga.description || "No description." }}
-        </div>
-        <ng-template #footer>
-          <div class="flex justify-between">
-            <p-button
-              label="Detail"
-              severity="info"
-              variant="outlined"
-              (click)="detailDialog(manga)"
-            ></p-button>
-            <p-button
-              label="Delete"
-              variant="outlined"
-              severity="danger"
-              (click)="confirmDelete(manga)"
-            ></p-button>
+  <div *ngIf="mangas">
+    <div class="grid grid-cols-2 xl:grid-cols-5 md:grid-cols-3">
+      <div *ngFor="let manga of mangas" class="p-2">
+        <p-card>
+          <ng-template #header>
+            <img
+              class="w-full h-full max-h-100 object-cover rounded-lg"
+              [src]="manga.imageUrl"
+              [alt]="manga.title"
+            />
+          </ng-template>
+          <ng-template #title> {{ manga.title }} </ng-template>
+          <ng-template #subtitle> {{ manga.publisher }} </ng-template>
+          <div class="text-gray-400 truncate">
+            {{ manga.description || "No description." }}
           </div>
           <ng-template #footer>
             <div class="flex justify-between">
@@ -63,266 +48,263 @@
               ></p-button>
             </div>
           </ng-template>
-        </ng-template>
-      </p-card>
+        </p-card>
+      </div>
     </div>
   </div>
+</div>
 
-  <!-- Confirm Delete Dialog -->
-  <p-confirmdialog #cd>
-    <ng-template
-      #headless
-      let-message
-      let-onAccept="onAccept"
-      let-onReject="onReject"
+<!-- Confirm Delete Dialog -->
+<p-confirmdialog #cd>
+  <ng-template
+    #headless
+    let-message
+    let-onAccept="onAccept"
+    let-onReject="onReject"
+  >
+    <div
+      class="flex flex-col items-center p-8 bg-surface-0 dark:bg-surface-900 rounded"
     >
       <div
-        class="flex flex-col items-center p-8 bg-surface-0 dark:bg-surface-900 rounded"
+        class="rounded-full bg-primary text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20"
       >
-        <div
-          class="rounded-full bg-primary text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20"
-        >
-          <i
-            class="pi pi-times-circle"
-            style="color: red; font-size: 8.5rem"
-          ></i>
-        </div>
-        <span class="font-bold text-2xl block mb-2 mt-6">{{
-          message.header
-        }}</span>
-        <p class="mb-0">{{ message.message }}</p>
-        <div class="flex items-center gap-2 mt-6">
-          <p-button
-            label="Delete"
-            severity="danger"
-            (onClick)="onAccept()"
-            styleClass="w-32"
-          ></p-button>
-          <p-button
-            label="Cancel"
-            [outlined]="true"
-            (onClick)="onReject()"
-            styleClass="w-32"
-          ></p-button>
-        </div>
+        <i class="pi pi-times-circle" style="color: red; font-size: 8.5rem"></i>
       </div>
-    </ng-template>
-  </p-confirmdialog>
-
-  <!-- Manga Detail Dialog -->
-  <p-dialog
-    [(visible)]="showDetailDialog"
-    [modal]="true"
-    [styleClass]="'w-[90%] md:w-1/2'"
-  >
-    <ng-template pTemplate="header">
-      <div class="flex justify-between items-center w-full">
-        <span class="text-xl md:text-3xl font-semibold">{{
-          selectedManga?.title
-        }}</span>
-      </div>
-    </ng-template>
-
-    <div class="p-4 flex flex-col items-center text-center">
-      <!-- รูปภาพ -->
-      <img
-        [src]="selectedManga?.imageUrl"
-        alt="{{ selectedManga?.title }}"
-        class="h-full max-h-[500px] object-cover rounded-lg shadow-md"
-      />
-
-      <!-- ประเภทหนังสือ -->
-      <p class="text-gray-500 mt-2 text-md">{{ selectedManga?.type }}</p>
-
-      <!-- สำนักพิมพ์ -->
-      <p class="text-gray-500 mt-2 text-md">{{ selectedManga?.publisher }}</p>
-
-      <!-- ข้อมูลเล่ม -->
-      <div class="mt-4 text-left text-xl md:text-2xl">
-        <p><strong>📖 เริ่มมีเล่มที่:</strong> {{ selectedManga?.start }}</p>
-        <p><strong>📚 ถึงเล่มที่:</strong> {{ selectedManga?.end }}</p>
-        <p><strong>❌ ที่ยังไม่มี:</strong> {{ selectedManga?.notHave }}</p>
-      </div>
-
-      <!-- คำอธิบาย -->
-      <p class="mt-4 text-xl text-gray-300">
-        {{ selectedManga?.description || "No description." }}
-      </p>
-    </div>
-
-    <ng-template pTemplate="footer">
-      <div class="flex justify-center">
-        <button
-          pButton
-          label="Edit"
-          icon="pi pi-pencil"
-          class="p-button-text"
-          (click)="editDialog()"
-        ></button>
-      </div>
-    </ng-template>
-  </p-dialog>
-
-  <!-- Add/Edit Manga -->
-  <p-dialog
-    [header]="selectedManga ? 'Edit Manga' : 'Add Manga'"
-    [(visible)]="showAddDialog"
-    [modal]="true"
-    [styleClass]="'w-[90%] md:w-1/2'"
-    (onHide)="resetForm()"
-  >
-    <form [formGroup]="addMangaForm" (ngSubmit)="onSubmit()" class="space-y-4">
-      <!-- Title -->
-      <div class="flex flex-col">
-        <label class="font-semibold mb-1">Title</label>
-        <input
-          type="text"
-          pInputText
-          formControlName="title"
-          placeholder="Enter manga title"
-          class="w-full"
-        />
-      </div>
-
-      <!-- Publisher -->
-      <div class="flex flex-col">
-        <label class="font-semibold mb-1">Publisher</label>
-        <!-- New Publisher -->
-        <div class="flex">
-          <input
-            type="text"
-            pInputText
-            placeholder="Enter publisher"
-            class="w-full"
-            [(ngModel)]="newPublisher"
-            [ngModelOptions]="{ standalone: true }"
-            (input)="onPublisherInputChange()"
-          />
-          <!-- Select Publisher -->
-          <p-select
-            formControlName="publisher"
-            [options]="mangaPublisherOptions"
-            placeholder="Select publisher"
-            class="w-full"
-          ></p-select>
-        </div>
-      </div>
-
-      <!-- Type -->
-      <div class="flex-col">
-        <label class="font-semibold mb-1">Type</label>
-        <!-- New Type -->
-        <div class="flex">
-          <input
-            type="text"
-            pInputText
-            placeholder="Enter type"
-            class="w-full"
-            [(ngModel)]="newType"
-            [ngModelOptions]="{ standalone: true }"
-            (input)="onTypeInputChange()"
-          />
-          <!-- Select Type -->
-          <p-select
-            formControlName="type"
-            [options]="mangaTypeOptions"
-            placeholder="Select type"
-            class="w-full"
-          ></p-select>
-        </div>
-      </div>
-
-      <!-- Image URL -->
-      <div class="flex flex-col">
-        <label class="font-semibold mb-1">Image URL</label>
-        <input
-          type="text"
-          pInputText
-          formControlName="imageUrl"
-          placeholder="Enter image URL"
-          class="w-full"
-        />
-      </div>
-
-      <!-- Preview -->
-      <div *ngIf="addMangaForm.get('imageUrl')?.value">
-        <div class="flex flex-col">
-          <label class="font-semibold mb-1">Preview</label>
-          <div class="flex justify-center">
-            <img
-              [src]="addMangaForm.get('imageUrl')?.value"
-              [alt]="addMangaForm.get('title')?.value || 'Manga cover'"
-              class="max-h-100 object-cover rounded-lg shadow-md"
-            />
-          </div>
-        </div>
-      </div>
-
-      <!-- Start & End -->
-      <div class="grid grid-cols-2 gap-4">
-        <div class="flex flex-col">
-          <label class="font-semibold mb-1">Start Volume</label>
-          <input
-            type="number"
-            pInputText
-            formControlName="start"
-            placeholder="Start volume"
-            class="w-full"
-          />
-        </div>
-
-        <div class="flex flex-col">
-          <label class="font-semibold mb-1">End Volume</label>
-          <input
-            type="number"
-            pInputText
-            formControlName="end"
-            placeholder="End volume"
-            class="w-full"
-          />
-        </div>
-      </div>
-
-      <!-- Not Have -->
-      <div class="flex flex-col">
-        <label class="font-semibold mb-1">Not Have</label>
-        <input
-          type="text"
-          pInputText
-          formControlName="notHave"
-          placeholder="e.g. 1,2,3"
-          class="w-full"
-        />
-      </div>
-
-      <!-- Description -->
-      <div class="flex flex-col">
-        <label class="font-semibold mb-1">Description</label>
-        <textarea
-          rows="3"
-          pInputTextarea
-          formControlName="description"
-          placeholder="Enter description"
-          class="w-full"
-        ></textarea>
-      </div>
-
-      <!-- Cancel / Save -->
-      <div class="flex justify-end gap-2 pt-4">
+      <span class="font-bold text-2xl block mb-2 mt-6">{{
+        message.header
+      }}</span>
+      <p class="mb-0">{{ message.message }}</p>
+      <div class="flex items-center gap-2 mt-6">
+        <p-button
+          label="Delete"
+          severity="danger"
+          (onClick)="onAccept()"
+          styleClass="w-32"
+        ></p-button>
         <p-button
           label="Cancel"
-          icon="pi pi-times"
-          (click)="showAddDialog = false"
-          severity="secondary"
-        ></p-button>
-        <p-button
-          label="Save"
-          icon="pi pi-check"
-          [disabled]="addMangaForm.invalid"
-          type="submit"
-          severity="success"
+          [outlined]="true"
+          (onClick)="onReject()"
+          styleClass="w-32"
         ></p-button>
       </div>
-    </form>
-  </p-dialog>
-</div>
+    </div>
+  </ng-template>
+</p-confirmdialog>
+
+<!-- Manga Detail Dialog -->
+<p-dialog
+  [(visible)]="showDetailDialog"
+  [modal]="true"
+  [styleClass]="'w-[90%] md:w-1/2'"
+>
+  <ng-template pTemplate="header">
+    <div class="flex justify-between items-center w-full">
+      <span class="text-xl md:text-3xl font-semibold">{{
+        selectedManga?.title
+      }}</span>
+    </div>
+  </ng-template>
+
+  <div class="p-4 flex flex-col items-center text-center">
+    <!-- รูปภาพ -->
+    <img
+      [src]="selectedManga?.imageUrl"
+      alt="{{ selectedManga?.title }}"
+      class="h-full max-h-[500px] object-cover rounded-lg shadow-md"
+    />
+
+    <!-- ประเภทหนังสือ -->
+    <p class="text-gray-500 mt-2 text-md">{{ selectedManga?.type }}</p>
+
+    <!-- สำนักพิมพ์ -->
+    <p class="text-gray-500 mt-2 text-md">{{ selectedManga?.publisher }}</p>
+
+    <!-- ข้อมูลเล่ม -->
+    <div class="mt-4 text-left text-xl md:text-2xl">
+      <p><strong>📖 เริ่มมีเล่มที่:</strong> {{ selectedManga?.start }}</p>
+      <p><strong>📚 ถึงเล่มที่:</strong> {{ selectedManga?.end }}</p>
+      <p><strong>❌ ที่ยังไม่มี:</strong> {{ selectedManga?.notHave }}</p>
+    </div>
+
+    <!-- คำอธิบาย -->
+    <p class="mt-4 text-xl text-gray-300">
+      {{ selectedManga?.description || "No description." }}
+    </p>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-center">
+      <button
+        pButton
+        label="Edit"
+        icon="pi pi-pencil"
+        class="p-button-text"
+        (click)="editDialog()"
+      ></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Add/Edit Manga -->
+<p-dialog
+  [header]="selectedManga ? 'Edit Manga' : 'Add Manga'"
+  [(visible)]="showAddDialog"
+  [modal]="true"
+  [styleClass]="'w-[90%] md:w-1/2'"
+  (onHide)="resetForm()"
+>
+  <form [formGroup]="addMangaForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <!-- Title -->
+    <div class="flex flex-col">
+      <label class="font-semibold mb-1">Title</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="title"
+        placeholder="Enter manga title"
+        class="w-full"
+      />
+    </div>
+
+    <!-- Publisher -->
+    <div class="flex flex-col">
+      <label class="font-semibold mb-1">Publisher</label>
+      <!-- New Publisher -->
+      <div class="flex">
+        <input
+          type="text"
+          pInputText
+          placeholder="Enter publisher"
+          class="w-full"
+          [(ngModel)]="newPublisher"
+          [ngModelOptions]="{ standalone: true }"
+          (input)="onPublisherInputChange()"
+        />
+        <!-- Select Publisher -->
+        <p-select
+          formControlName="publisher"
+          [options]="mangaPublisherOptions"
+          placeholder="Select publisher"
+          class="w-full"
+        ></p-select>
+      </div>
+    </div>
+
+    <!-- Type -->
+    <div class="flex-col">
+      <label class="font-semibold mb-1">Type</label>
+      <!-- New Type -->
+      <div class="flex">
+        <input
+          type="text"
+          pInputText
+          placeholder="Enter type"
+          class="w-full"
+          [(ngModel)]="newType"
+          [ngModelOptions]="{ standalone: true }"
+          (input)="onTypeInputChange()"
+        />
+        <!-- Select Type -->
+        <p-select
+          formControlName="type"
+          [options]="mangaTypeOptions"
+          placeholder="Select type"
+          class="w-full"
+        ></p-select>
+      </div>
+    </div>
+
+    <!-- Image URL -->
+    <div class="flex flex-col">
+      <label class="font-semibold mb-1">Image URL</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="imageUrl"
+        placeholder="Enter image URL"
+        class="w-full"
+      />
+    </div>
+
+    <!-- Preview -->
+    <div *ngIf="addMangaForm.get('imageUrl')?.value">
+      <div class="flex flex-col">
+        <label class="font-semibold mb-1">Preview</label>
+        <div class="flex justify-center">
+          <img
+            [src]="addMangaForm.get('imageUrl')?.value"
+            [alt]="addMangaForm.get('title')?.value || 'Manga cover'"
+            class="max-h-100 object-cover rounded-lg shadow-md"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Start & End -->
+    <div class="grid grid-cols-2 gap-4">
+      <div class="flex flex-col">
+        <label class="font-semibold mb-1">Start Volume</label>
+        <input
+          type="number"
+          pInputText
+          formControlName="start"
+          placeholder="Start volume"
+          class="w-full"
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label class="font-semibold mb-1">End Volume</label>
+        <input
+          type="number"
+          pInputText
+          formControlName="end"
+          placeholder="End volume"
+          class="w-full"
+        />
+      </div>
+    </div>
+
+    <!-- Not Have -->
+    <div class="flex flex-col">
+      <label class="font-semibold mb-1">Not Have</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="notHave"
+        placeholder="e.g. 1,2,3"
+        class="w-full"
+      />
+    </div>
+
+    <!-- Description -->
+    <div class="flex flex-col">
+      <label class="font-semibold mb-1">Description</label>
+      <textarea
+        rows="3"
+        pInputTextarea
+        formControlName="description"
+        placeholder="Enter description"
+        class="w-full"
+      ></textarea>
+    </div>
+
+    <!-- Cancel / Save -->
+    <div class="flex justify-end gap-2 pt-4">
+      <p-button
+        label="Cancel"
+        icon="pi pi-times"
+        (click)="showAddDialog = false"
+        severity="secondary"
+      ></p-button>
+      <p-button
+        label="Save"
+        icon="pi pi-check"
+        [disabled]="addMangaForm.invalid"
+        type="submit"
+        severity="success"
+      ></p-button>
+    </div>
+  </form>
+</p-dialog>

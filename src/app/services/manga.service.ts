@@ -15,23 +15,23 @@ export class MangaService {
 
   constructor(private http: HttpClient) {}
 
-  getManga(): Observable<GetMangaDTO[]> {
+  getManga(): Observable<any> {
     return this.http.get<GetMangaDTO[]>(this.mangaApiUrl);
   }
 
-  getMangaAsync(id: number): Observable<GetMangaAsyncDTO> {
+  getMangaAsync(id: number): Observable<any> {
     return this.http.get<GetMangaAsyncDTO>(this.mangaApiUrl + `/${id}`);
   }
 
-  createManga(data: CreateMangaDTO) {
+  createManga(data: CreateMangaDTO): Observable<any> {
     return this.http.post(this.mangaApiUrl, data);
   }
 
-  updateManga(data: UpdateMangaDTO, id: number) {
+  updateManga(data: UpdateMangaDTO, id: number): Observable<any> {
     return this.http.put(this.mangaApiUrl + `/${id}`, data);
   }
 
-  deleteManga(id: number) {
+  deleteManga(id: number): Observable<any> {
     return this.http.delete(this.mangaApiUrl + `/${id}`);
   }
 }
